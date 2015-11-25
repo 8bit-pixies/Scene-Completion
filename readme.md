@@ -11,6 +11,14 @@ Additional Outputs are located in the following albums:
 *  <http://imgur.com/a/ZdWUS>
 *  <http://imgur.com/a/jEeXF>
 
+Other Notes and Work
+--------------------
+
+The Flickr Download code is based on the code ["Download Images from Flickr with Python"](http://halotis.com/download-images-from-flickr-with-python/)
+
+Whilst my (failed) attempt at the gist descriptor is based on the hints provided on [quora](https://www.quora.com/Computer-Vision/What-is-a-GIST-descriptor). The GIST descriptor is used to perform similar image matching within the [Scene Completion paper](graphics.cs.cmu.edu/projects/scene-completion/). 
+
+The sample images are based on the [Scene Completion work assignment which was implemented in Matlab](http://cs.brown.edu/courses/cs129/results/final/zyp/)
 
 
 
