@@ -20,5 +20,8 @@ Whilst my (failed) attempt at the gist descriptor is based on the hints provided
 
 The sample images are based on the [Scene Completion work assignment which was implemented in Matlab](http://cs.brown.edu/courses/cs129/results/final/zyp/)
 
+Notes
+-----
 
+The Gist descriptor for the three channels looks at all the colours rather than the grayscale images only.
 
