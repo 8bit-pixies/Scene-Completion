@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[19]:
+# In[1]:
 
 get_ipython().magic(u'matplotlib inline')
 
@@ -32,13 +32,32 @@ get_ipython().magic(u'matplotlib inline')
 # Reference:
 # 1.  Modeling the shape of the scene: a holistic representation of the spatial envelope
 
-# In[21]:
+# In[9]:
 
 import cv2
 import math
 
 
-# In[22]:
+# In[8]:
+
+#### helper function for ipython
+
+def implot(im, gray=False):
+    cv_rgb = cv2.cvtColor(im.astype(np.uint8), cv2.COLOR_BGR2RGB)
+    plt.imshow(cv_rgb)
+    #plt.show()
+    
+def np2to3(im):
+    # convert 2d to 3d naively
+    new_im = np.zeros((im.shape[0], im.shape[1], 3))
+    r, c = im.shape
+    for x in range(r):
+        for y in range(c):
+            new_im[x, y, :] = im[x,y]
+    return new_im
+
+
+# In[10]:
 
 from __future__ import print_function
 
@@ -91,7 +110,9 @@ def make_square(img):
     """
     r, c = img.shape
     
-    side4 = (int(min([r,c])/4)) * 4
+    side4 = (int(max([r,c])/4)) * 4
+    
+    return cv2.resize(img, (side4, side4))
     
     one_edge = side4/2
     img1 = img[((r/2)-one_edge):((r/2)+one_edge), ((c/2)-one_edge):((c/2)+one_edge)]
@@ -127,12 +148,12 @@ images = apple/255.0
 ref_feats = compute_feats(images, kernels)
 
 
-# In[23]:
+# In[15]:
 
 feats = compute_feats(ndi.rotate(images, angle=190, reshape=False), kernels)
 
 
-# In[24]:
+# In[16]:
 
 def power(image, kernel):
     # Normalize images for better comparison.
@@ -141,7 +162,7 @@ def power(image, kernel):
                    ndi.convolve(image, np.imag(kernel), mode='wrap')**2)
 
 
-# In[33]:
+# In[17]:
 
 def compute_avg(img):
     img = make_square(img)
@@ -159,7 +180,7 @@ def compute_avg(img):
     return np.array(grid_images).reshape((4,4))
 
 
-# In[25]:
+# In[18]:
 
 # Plot a selection of the filter bank kernels and their responses.
 results = []
@@ -175,26 +196,7 @@ for theta in (0, 1, 2, 3, 4, 5, 6, 7):
         results.append((kernel, power(images, kernel)))
 
 
-# In[26]:
-
-#### helper function for ipython
-
-def implot(im, gray=False):
-    cv_rgb = cv2.cvtColor(im.astype(np.uint8), cv2.COLOR_BGR2RGB)
-    plt.imshow(cv_rgb)
-    #plt.show()
-    
-def np2to3(im):
-    # convert 2d to 3d naively
-    new_im = np.zeros((im.shape[0], im.shape[1], 3))
-    r, c = im.shape
-    for x in range(r):
-        for y in range(c):
-            new_im[x, y, :] = im[x,y]
-    return new_im
-
-
-# In[27]:
+# In[19]:
 
 gabor_stuff = results
 
@@ -209,18 +211,18 @@ def power_single(gs):
     return powers*255
 
 
-# In[31]:
+# In[20]:
 
 def get_gist_descriptor(gabor_stuff):
     return np.array([compute_avg(power_single(img)) for img in gabor_stuff])
 
 
-# In[34]:
+# In[21]:
 
 test = get_gist_descriptor(gabor_stuff)
 
 
-# In[35]:
+# In[22]:
 
 def compute_gist_descriptor(img_loc):
     # build average feature map:
@@ -280,7 +282,7 @@ def compute_gist_descriptor(img_loc):
     return np.array([compute_avg(power_single(img)) for img in results]).reshape(512,)
 
 
-# In[36]:
+# In[23]:
 
 def compute_gist_descriptor3(img_loc):
     # build average feature map:
@@ -346,17 +348,17 @@ def compute_gist_descriptor3(img_loc):
     return np.hstack([im0, im1, im2])
 
 
-# In[37]:
+# In[24]:
 
 test = compute_gist_descriptor3('hk.jpg')
 
 
-# In[39]:
+# In[25]:
 
 im = test.reshape((16,96))
 
 
-# In[41]:
+# In[26]:
 
 # build knn model...
 import glob
@@ -364,7 +366,7 @@ import glob
 img_data = glob.glob("im/*.jpg")
 
 
-# In[42]:
+# In[27]:
 
 for im in img_data:
     plt.figure()
@@ -372,13 +374,13 @@ for im in img_data:
     implot(img)
 
 
-# In[43]:
+# In[28]:
 
 base_img = cv2.imread('input2.jpg')
 implot(base_img)
 
 
-# In[44]:
+# In[29]:
 
 # get the closest one....
 base_gist = compute_gist_descriptor('input2.jpg')
@@ -389,7 +391,7 @@ for im1 in img_data:
     gist_descriptors.append(ssd(gd, base_gist))
 
 
-# In[45]:
+# In[30]:
 
 best_img = cv2.imread(img_data[np.argmin(gist_descriptors)])
 implot(best_img)
