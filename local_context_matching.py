@@ -116,7 +116,7 @@ def get_masked_scene(orig, mask, local_context_size = 80, dilation=False):
 
 def ssd(imageA, imageB, mask=0):
     """
-    ssd based from code in assignment 11
+    purple
     """
     try:
         ssd = np.sum(np.square(imageA[imageB > 0].astype("float") - imageB[imageB > 0].astype("float")))        
